@@ -27,7 +27,12 @@ class User < ApplicationRecord
   
   # 永続セッションのためハッシュ化したトークンをデータベースに記憶します。
   def remember
-    self.remember_token = User.new_token
-    update_attribute(:remember_digest, User.digest(remember_token))
+   self.remember_token = User.new_token
+   update_attribute(:remember_digest, User.digest(remember_token))
+  end
+  
+  # トークンがダイジェストと一致すればtrueを返します。
+  def authenticated?(remember_token)
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
   end
 end
