@@ -5,7 +5,6 @@ class UsersController < ApplicationController
 
 
   def show
-    @user = User.find(params[:id])
   end
 
   def new
@@ -24,7 +23,6 @@ class UsersController < ApplicationController
   end
   
   def edit
-    @user = User.find(params[:id])
   end
   
   def update
@@ -45,9 +43,15 @@ class UsersController < ApplicationController
   
   #beforeフィルター
   
+  # paramsハッシュからユーザーを取得します。
+  def set_user
+    @user = User.find(params[:id])
+  end
+  
   #ログイン済みのユーザーか確認します。
   def logged_in_user
     unless logged_in?
+      store_location
       flash[:danger] = "ログインしてください。"
       redirect_to login_url
     end
@@ -56,6 +60,11 @@ class UsersController < ApplicationController
   # アクセスしたユーザーが現在ログインしているユーザーか確認します。
   def correct_user
     redirect_to(root_url) unless current_user?(@user)
+  end
+
+  def redirect_back_or(default_url)
+  redirect_to(session[:forwarding_url] || default_url)
+  session.delete(:forwarding_url)
   end
 
 end
