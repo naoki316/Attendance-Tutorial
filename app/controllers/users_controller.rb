@@ -3,6 +3,9 @@ class UsersController < ApplicationController
   before_action :logged_in_user, only: [:show, :edit, :update]
   before_action :correct_user, only: [:edit, :update]
 
+  def index
+    @users = User.all
+  end
 
   def show
   end
@@ -61,10 +64,5 @@ class UsersController < ApplicationController
   def correct_user
     redirect_to(root_url) unless current_user?(@user)
   end
-
-  def redirect_back_or(default_url)
-  redirect_to(session[:forwarding_url] || default_url)
-  session.delete(:forwarding_url)
-  end
-
+  
 end
